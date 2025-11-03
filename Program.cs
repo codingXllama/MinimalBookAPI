@@ -1,4 +1,3 @@
-
 namespace MinimalBookAPI
 {
     public class Program
@@ -27,9 +26,9 @@ namespace MinimalBookAPI
             app.UseAuthorization();
 
 
-            //Creating a list of books
+            //Creating a list of Books
 
-            var books = new List<Book>
+            var MyBooks = new List<Book>
             {
                 new() {Id=1,Title = "The HungerGames", Author = "Ronaldo"},
                 new() { Id = 2, Title = "HarryPoter", Author = "Kaka" },
@@ -40,14 +39,26 @@ namespace MinimalBookAPI
             //Get Method is HTTP request
             app.MapGet("/book", () =>
             {
-                return books;
+                return MyBooks;
             });
 
             //using the lamda expression {} => ();
             app.MapGet("/book/{id}", (int id) =>
             {
-                //books ID, b - is the same as the ID given in the API.
-                return books.Find(b => b.Id == id);
+                //MyBooks ID, b - is the same as the ID given in the API.
+                var book = MyBooks.Find(b => b.Id == id);
+                if (book is null)
+                    return Results.NotFound("Sorry, this book does not exist");
+
+                return Results.Ok(book);
+            });
+
+            //Adding a book uses the POST method
+            app.MapPost("/book", (Book book) =>
+            {
+                // you can add the book to a DB here, but we're not doing that. We're just adding the book to a list
+                MyBooks.Add(book);
+                return MyBooks;
             });
 
             app.Run();
