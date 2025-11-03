@@ -73,7 +73,22 @@ namespace MinimalBookAPI
                 book.Title = updatedBook.Title;
                 book.Author = updatedBook.Author;
 
-                return Results.Ok(book);
+                return Results.Ok(MyBooks);
+            });
+
+
+            //Deleting a book record using the Delete request
+            app.MapDelete("/book/{id}", (int id) =>
+            {
+                //MyBooks ID, b - is the same as the ID given in the API.
+                var book = MyBooks.Find(b => b.Id == id);
+                if (book is null)
+                    return Results.NotFound("Sorry, this book does not exist");
+
+                //updating the book properties.
+                MyBooks.Remove(book);
+
+                return Results.Ok(MyBooks);
             });
 
             app.Run();
