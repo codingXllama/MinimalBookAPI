@@ -61,6 +61,21 @@ namespace MinimalBookAPI
                 return MyBooks;
             });
 
+            //Updating a book using the PUT request not POST.
+            app.MapPut("/book/{id}", (Book updatedBook, int id) =>
+            {
+                //MyBooks ID, b - is the same as the ID given in the API.
+                var book = MyBooks.Find(b => b.Id == id);
+                if (book is null)
+                    return Results.NotFound("Sorry, this book does not exist");
+
+                //updating the book properties.
+                book.Title = updatedBook.Title;
+                book.Author = updatedBook.Author;
+
+                return Results.Ok(book);
+            });
+
             app.Run();
 
         }
